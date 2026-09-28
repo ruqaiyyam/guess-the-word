@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block body %}
+<form method="post" class="card">
+  <h2>Register</h2>
+  <label>Username <input name="username" required pattern="[A-Za-z]{5,}" title="At least 5 letters, A-Z or a-z only"></label>
+  <label>Password <input name="password" type="password" required minlength="5"></label>
+  <p class="hint">Username: 5+ letters. Password: 5+ characters with a letter, a digit and one of $ % *</p>
+  <button>Register</button>
+  <p>Already registered? <a href="{{ url_for('login') }}">Log in</a></p>
+</form>
+{% endblock %}

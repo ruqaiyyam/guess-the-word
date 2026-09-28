@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block body %}
+<form method="post" class="card">
+  <h2>Log in</h2>
+  <label>Username <input name="username" required autofocus></label>
+  <label>Password <input name="password" type="password" required></label>
+  <button>Log in</button>
+  <p>New player? <a href="{{ url_for('register') }}">Register</a></p>
+</form>
+{% endblock %}

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guess the Word</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+  <h1>GUESS THE WORD</h1>
+  {% if user %}<nav><span>{{ user.username }} ({{ user.role }})</span> <a href="{{ url_for('logout') }}">Log out</a></nav>{% endif %}
+</header>
+<main>
+{% with msgs = get_flashed_messages(with_categories=true) %}
+  {% for cat, m in msgs %}<div class="flash {{ cat }}">{{ m }}</div>{% endfor %}
+{% endwith %}
+{% block body %}{% endblock %}
+</main>
+</body>
+</html>

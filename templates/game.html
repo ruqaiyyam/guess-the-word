@@ -1,0 +1,48 @@
+{% extends "base.html" %}{% block body %}
+<div class="card">
+  <p id="info" class="hint">Guess the 5-letter word. You have {{ max_guesses }} guesses.</p>
+  <div id="board">
+    {% for row in range(max_guesses) %}
+    <div class="row">
+      {% for col in range(5) %}
+        {% if row < history|length %}
+          <div class="tile {{ history[row].colors[col] }}">{{ history[row].letters[col] }}</div>
+        {% else %}<div class="tile"></div>{% endif %}
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+  <div id="error" class="flash error" hidden></div>
+  <form id="guess-form" autocomplete="off">
+    <input id="guess" maxlength="5" pattern="[A-Z]{5}" required autofocus placeholder="ABCDE">
+    <button>Submit</button>
+  </form>
+</div>
+<div id="modal" class="modal" hidden><div class="modal-box"><p id="modal-msg"></p><button id="ok">OK</button></div></div>
+<script>
+let used = {{ history|length }};
+const input = document.getElementById('guess');
+input.addEventListener('input', () => { input.value = input.value.toUpperCase().replace(/[^A-Z]/g, ''); });
+document.getElementById('guess-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const err = document.getElementById('error'); err.hidden = true;
+  const text = input.value;
+  const res = await fetch("{{ url_for('guess', game_id=game_id) }}", {
+    method: 'POST', headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({guess: text})});
+  const data = await res.json();
+  if (!res.ok) { err.textContent = data.error; err.hidden = false; return; }
+  const tiles = document.querySelectorAll('#board .row')[used].children;
+  [...text].forEach((ch, i) => { tiles[i].textContent = ch; tiles[i].classList.add(data.colors[i]); });
+  used = data.guesses_used; input.value = '';
+  if (data.status !== 'in_progress') {
+    document.getElementById('guess-form').hidden = true;
+    document.getElementById('modal-msg').textContent = data.status === 'won'
+      ? 'Congratulations! You guessed the word!'
+      : 'Better luck next time! The word was ' + data.answer + '.';
+    document.getElementById('modal').hidden = false;
+  }
+});
+document.getElementById('ok').addEventListener('click', () => { location.href = "{{ url_for('dashboard') }}"; });
+</script>
+{% endblock %}

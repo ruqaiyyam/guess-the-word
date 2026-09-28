@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block body %}
+<div class="card">
+  <h2>Ready to play?</h2>
+  <p>Words played today: <b>{{ used }}</b> of {{ limit }}</p>
+  <form method="post" action="{{ url_for('play') }}"><button>Start / resume game</button></form>
+</div>
+{% endblock %}

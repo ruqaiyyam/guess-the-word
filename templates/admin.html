@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% block body %}
+<div class="card wide">
+  <h2>Daily report</h2>
+  <form method="get"><label>Date <input type="date" name="date" value="{{ day }}"></label> <button>Show</button></form>
+  <table><tr><th>Date</th><th>Users</th><th>Correct guesses</th></tr>
+  <tr><td>{{ day }}</td><td>{{ day_report.users }}</td><td>{{ day_report.correct }}</td></tr></table>
+</div>
+<div class="card wide">
+  <h2>User report</h2>
+  <form method="get"><input type="hidden" name="date" value="{{ day }}">
+    <label>Player <select name="username">
+      {% for p in players %}<option {% if p.username == selected %}selected{% endif %}>{{ p.username }}</option>{% endfor %}
+    </select></label> <button>Show</button></form>
+  {% if user_report is not none %}
+  <table><tr><th>Date</th><th>Words tried</th><th>Correct guesses</th></tr>
+  {% for r in user_report %}<tr><td>{{ r.play_date }}</td><td>{{ r.tried }}</td><td>{{ r.correct }}</td></tr>
+  {% else %}<tr><td colspan="3">No games yet.</td></tr>{% endfor %}</table>
+  {% endif %}
+</div>
+{% endblock %}
